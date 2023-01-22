@@ -1,50 +1,54 @@
+from player import Player
+from board import Board
 import random
 
-current_position = 0
-win = 100
-snake_position = {14: 4, 28: 10, 47: 18, 43: 1, 51: 31, 63: 39, 68: 33, 77: 26, 83: 58, 90: 70, 93: 66, 95: 53, 99: 90}
-ladder_positions = {2: 21, 8: 30, 16: 37, 27: 69, 41: 62, 45: 55, 65: 97, 73: 94}
-print("welcome to the snake&ladder game")
-print('Hello! lets start the game ')
+
+class Real:
+    @staticmethod
+    def welcome():
+        print("Welcome to the game!!")
+        number_of_players = int(input("How many players are going to play : "))
+        return number_of_players
+
+    def players_information(self, number_of_players):
+        number_of_players = number_of_players
+        for i in range(number_of_players):
+            print("Details of the player", i + 1)
+            name = input("enter the name of player : ")
+            sex = input("enter the sex of player : ")
+            cone_color = input("enter the selected color of cone : ")
+            obj = Player(name, sex, cone_color)
+            obj.list_of_players(obj, i + 1)
+
+    @staticmethod
+    def start():
+        print("Let's start the game!!!")
+        win = True
+        player_number = 1
+        while win:
+            print("Player", player_number, " roll the dice")
+            number = random.randint(1, 6)
+            print("the number is ", number)
+            current_value = Board.position_on_board(player_number, number)
+            if current_value:
+                print("Congrats you win the gram")
+                win = False
+
+            else:
+                if number == 6:
+                    continue
+                else:
+                    if player_number == number_of_players:
+                        player_number = 1
+                    else:
+                        player_number = player_number + 1
 
 
-def calculate_current_position(initialposition, dicevalue):
-    currentposition = initialposition + dicevalue
-    return currentposition
+game = Real()
+board = Board()
+number_of_players = game.welcome()
+game.players_information(number_of_players)
+Player.playerslist_jsonfile()
+Board.snake_and_ladder_and_players_list()
+game.start()
 
-
-def calculate_game_over(currentposition):
-    if currentposition == win:
-        print("You won the game")
-        quit()
-
-
-def calculate_snake(currentposition):
-    if currentposition in snake_position.keys():
-        currentposition = snake_position[currentposition]
-        print('snake got you down!! and you current position is ', currentposition)
-    return currentposition
-
-
-def calculate_ladder(currentposition):
-    if currentposition in ladder_positions.keys():
-        currentposition = ladder_positions[currentposition]
-        print("Hurray you got the ladder!! and your current position is ", currentposition)
-    return currentposition
-
-
-while current_position < win:
-    print(current_position)
-    input()
-    dice_value = random.randint(1, 6)
-    print(dice_value)
-    current_position = calculate_current_position(current_position, dice_value)
-    calculate_game_over(current_position)
-    current_position1 = calculate_snake(current_position)
-    if current_position1 != current_position:
-        current_position = current_position1
-        continue
-    current_position2 = calculate_ladder(current_position)
-    if current_position2 != current_position:
-        current_position = current_position2
-        continue
